@@ -1,64 +1,297 @@
-let userScore = 0;
-let compScore = 0;
-const msg = document.querySelector("#msg");
-const choices = document.querySelectorAll(".choice");
+:root {
+    color-scheme: light;
+    --bg: #f4f1e8;
+    --panel: #fffdf7;
+    --ink: #202020;
+    --muted: #707070;
+    --line: #ded7c6;
+    --accent: #277c78;
+    --accent-dark: #155653;
+    --paper: #f8c14d;
+    --danger: #c95343;
+}
 
-const userScorePara = document.querySelector("#user-score");
-const compScorePara = document.querySelector("#comp-score");
+* {
+    box-sizing: border-box;
+}
 
-const genCompChoice = () => {
-    const options = ["rock", "paper", "scissors"];
-    const randIdx = Math.floor(Math.random() * 3);
-    return options[randIdx];
-};
+body {
+    min-height: 100vh;
+    margin: 0;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Arial, Helvetica, sans-serif;
+}
 
-const drawGame = () => {
-    console.log("Game Draw!!");
-    msg.innerText = "Game was draw, Play Again!";
-    msg.style.backgroundColor = "#5a5a7a";
-};
+button {
+    font: inherit;
+}
 
-const showWinner = (userWin, userChoice, compChoice) => {
-    if (userWin) {
-        console.log("You won!");
-        msg.innerText = `🎉 You won! ${userChoice} beats ${compChoice} 🎉`;
-        msg.style.backgroundColor = "green";
-        userScore++;
-        userScorePara.innerText = userScore;
-    } else {
-        console.log("Computer wins!");
-        msg.innerText = `💀 You lose! ${compChoice} beats ${userChoice} 💀`;
-        msg.style.backgroundColor = "red";
-        compScore++;
-        compScorePara.innerText = compScore;
+.game {
+    width: min(860px, 100%);
+    background: var(--panel);
+    border: 2px solid var(--line);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 16px 36px rgba(39, 33, 20, 0.14);
+}
+
+.top-panel {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.eyebrow {
+    margin: 0 0 5px;
+    color: var(--accent-dark);
+    font-size: 0.86rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    line-height: 1;
+}
+
+.mode-switch {
+    display: flex;
+    gap: 8px;
+    padding: 5px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #f0eadb;
+}
+
+.mode-btn,
+.reset-btn {
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.mode-btn {
+    min-width: 112px;
+    padding: 10px 12px;
+    color: var(--muted);
+    background: transparent;
+}
+
+.mode-btn.active {
+    color: white;
+    background: var(--accent);
+}
+
+.score-board {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.score-box,
+.round-box {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px;
+    background: #fbf8ef;
+    text-align: center;
+}
+
+.score-box span,
+.round-box span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.score-box strong,
+.round-box strong {
+    display: block;
+    font-size: 2.2rem;
+}
+
+.round-box {
+    min-width: 104px;
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+}
+
+.round-box span {
+    color: #d7d7d7;
+}
+
+.play-area,
+.result-panel {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 16px;
+}
+
+.turn-text {
+    margin: 0 0 16px;
+    color: var(--accent-dark);
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.choices {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.choice {
+    min-height: 154px;
+    border: 2px solid var(--line);
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.choice:hover,
+.choice:focus-visible {
+    border-color: var(--accent);
+    background: #eef8f5;
+    transform: translateY(-2px);
+    outline: none;
+}
+
+.choice img {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+}
+
+.choice span {
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.picked-moves {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.picked-moves div {
+    min-height: 80px;
+    border-radius: 8px;
+    background: #f6f1e4;
+    padding: 14px;
+    text-align: center;
+}
+
+.picked-moves span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.picked-moves strong {
+    display: block;
+    font-size: 1.35rem;
+    text-transform: capitalize;
+}
+
+.message {
+    margin: 0;
+    border-radius: 8px;
+    padding: 14px;
+    background: var(--ink);
+    color: white;
+    font-weight: 700;
+    text-align: center;
+}
+
+.message.win {
+    background: var(--accent);
+}
+
+.message.draw {
+    background: var(--paper);
+    color: var(--ink);
+}
+
+.message.loss {
+    background: var(--danger);
+}
+
+.reset-btn {
+    width: 100%;
+    padding: 13px 16px;
+    color: white;
+    background: var(--ink);
+}
+
+.reset-btn:hover,
+.reset-btn:focus-visible {
+    background: var(--accent-dark);
+    outline: none;
+}
+
+@media (max-width: 700px) {
+    body {
+        padding: 14px;
     }
-};
 
-const playGame = (userChoice) => {
-    console.log("User choice is: ", userChoice);
-    const compChoice = genCompChoice();
-    console.log("Comp choice is: ", compChoice);
-
-    if (userChoice === compChoice) {
-        drawGame();
-        return;
+    .game {
+        padding: 16px;
     }
 
-    let userWin = true;
-    if (userChoice === "rock") {
-        userWin = compChoice === "paper" ? false : true;
-    } else if (userChoice === "paper") {
-        userWin = compChoice === "scissors" ? false : true;
-    } else if (userChoice === "scissors") {
-        userWin = compChoice === "rock" ? false : true;
+    .top-panel,
+    .score-board,
+    .picked-moves {
+        grid-template-columns: 1fr;
     }
 
-    showWinner(userWin, userChoice, compChoice);
-};
+    .top-panel {
+        display: grid;
+        align-items: stretch;
+    }
 
-choices.forEach((choice) => {
-    choice.addEventListener("click", () => {
-        const userChoice = choice.getAttribute("id");
-        playGame(userChoice);
-    });
-});
+    .mode-switch,
+    .choices {
+        grid-template-columns: 1fr;
+    }
+
+    .mode-switch {
+        display: grid;
+    }
+
+    .score-board {
+        display: grid;
+    }
+
+    .round-box {
+        min-width: 0;
+    }
+
+    .choices {
+        display: grid;
+    }
+
+    .choice {
+        min-height: 112px;
+    }
+}
