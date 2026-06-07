@@ -1,64 +1,156 @@
-let userScore = 0;
-let compScore = 0;
-const msg = document.querySelector("#msg");
-const choices = document.querySelectorAll(".choice");
+const choices = ["rock", "paper", "scissors"];
 
-const userScorePara = document.querySelector("#user-score");
-const compScorePara = document.querySelector("#comp-score");
+let mode = "computer";
+let playerOneScore = 0;
+let playerTwoScore = 0;
+let round = 1;
+let waitingPick = null;
 
-const genCompChoice = () => {
-    const options = ["rock", "paper", "scissors"];
-    const randIdx = Math.floor(Math.random() * 3);
-    return options[randIdx];
-};
+const modeButtons = document.querySelectorAll(".mode-btn");
+const choiceButtons = document.querySelectorAll(".choice");
+const resetButton = document.getElementById("reset-btn");
 
-const drawGame = () => {
-    console.log("Game Draw!!");
-    msg.innerText = "Game was draw, Play Again!";
-    msg.style.backgroundColor = "#5a5a7a";
-};
+const playerOneLabel = document.getElementById("player-one-label");
+const playerTwoLabel = document.getElementById("player-two-label");
+const leftPickLabel = document.getElementById("left-pick-label");
+const rightPickLabel = document.getElementById("right-pick-label");
+const playerOneScoreText = document.getElementById("player-one-score");
+const playerTwoScoreText = document.getElementById("player-two-score");
+const roundText = document.getElementById("round-number");
+const turnText = document.getElementById("turn-text");
+const message = document.getElementById("message");
+const playerOnePick = document.getElementById("player-one-pick");
+const playerTwoPick = document.getElementById("player-two-pick");
 
-const showWinner = (userWin, userChoice, compChoice) => {
-    if (userWin) {
-        console.log("You won!");
-        msg.innerText = `🎉 You won! ${userChoice} beats ${compChoice} 🎉`;
-        msg.style.backgroundColor = "green";
-        userScore++;
-        userScorePara.innerText = userScore;
-    } else {
-        console.log("Computer wins!");
-        msg.innerText = `💀 You lose! ${compChoice} beats ${userChoice} 💀`;
-        msg.style.backgroundColor = "red";
-        compScore++;
-        compScorePara.innerText = compScore;
+function computerPick() {
+    return choices[Math.floor(Math.random() * choices.length)];
+}
+
+function winner(firstPick, secondPick) {
+    if (firstPick === secondPick) {
+        return "draw";
     }
-};
 
-const playGame = (userChoice) => {
-    console.log("User choice is: ", userChoice);
-    const compChoice = genCompChoice();
-    console.log("Comp choice is: ", compChoice);
+    const firstPlayerWins =
+        (firstPick === "rock" && secondPick === "scissors") ||
+        (firstPick === "paper" && secondPick === "rock") ||
+        (firstPick === "scissors" && secondPick === "paper");
 
-    if (userChoice === compChoice) {
-        drawGame();
+    return firstPlayerWins ? "first" : "second";
+}
+
+function cleanName(choice) {
+    return choice.charAt(0).toUpperCase() + choice.slice(1);
+}
+
+function setMessage(text, type) {
+    message.textContent = text;
+    message.className = `message ${type || ""}`.trim();
+}
+
+function updateScore() {
+    playerOneScoreText.textContent = playerOneScore;
+    playerTwoScoreText.textContent = playerTwoScore;
+    roundText.textContent = round;
+}
+
+function showPicks(firstPick, secondPick) {
+    playerOnePick.textContent = cleanName(firstPick);
+    playerTwoPick.textContent = cleanName(secondPick);
+}
+
+function playRound(firstPick, secondPick) {
+    const result = winner(firstPick, secondPick);
+
+    showPicks(firstPick, secondPick);
+
+    if (result === "draw") {
+        setMessage("Draw. Nobody gets a point.", "draw");
+    } else if (result === "first") {
+        playerOneScore++;
+        setMessage(`${playerOneLabel.textContent} wins this round.`, "win");
+    } else {
+        playerTwoScore++;
+        const className = mode === "computer" ? "loss" : "win";
+        setMessage(`${playerTwoLabel.textContent} wins this round.`, className);
+    }
+
+    round++;
+    waitingPick = null;
+    updateScore();
+    turnText.textContent = "Choose a move for the next round.";
+}
+
+function playComputerMode(playerPick) {
+    playRound(playerPick, computerPick());
+}
+
+function playTwoPlayerMode(playerPick) {
+    if (!waitingPick) {
+        waitingPick = playerPick;
+        playerOnePick.textContent = "Hidden";
+        playerTwoPick.textContent = "-";
+        turnText.textContent = "Player 2, choose your move.";
+        setMessage("Player 1 has picked. No peeking.", "");
         return;
     }
 
-    let userWin = true;
-    if (userChoice === "rock") {
-        userWin = compChoice === "paper" ? false : true;
-    } else if (userChoice === "paper") {
-        userWin = compChoice === "scissors" ? false : true;
-    } else if (userChoice === "scissors") {
-        userWin = compChoice === "rock" ? false : true;
+    playRound(waitingPick, playerPick);
+}
+
+function play(choice) {
+    if (mode === "computer") {
+        playComputerMode(choice);
+    } else {
+        playTwoPlayerMode(choice);
     }
+}
 
-    showWinner(userWin, userChoice, compChoice);
-};
+function setMode(nextMode) {
+    mode = nextMode;
 
-choices.forEach((choice) => {
-    choice.addEventListener("click", () => {
-        const userChoice = choice.getAttribute("id");
-        playGame(userChoice);
+    modeButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.mode === mode);
+    });
+
+    resetGame();
+}
+
+function resetGame() {
+    playerOneScore = 0;
+    playerTwoScore = 0;
+    round = 1;
+    waitingPick = null;
+
+    const secondPlayer = mode === "computer" ? "Computer" : "Player 2";
+    playerOneLabel.textContent = "Player 1";
+    playerTwoLabel.textContent = secondPlayer;
+    leftPickLabel.textContent = "Player 1 picked";
+    rightPickLabel.textContent = `${secondPlayer} picked`;
+    playerOnePick.textContent = "-";
+    playerTwoPick.textContent = "-";
+    turnText.textContent = "Player 1, choose your move.";
+
+    const intro =
+        mode === "computer"
+            ? "Pick rock, paper or scissors. The computer will answer."
+            : "Player 1 picks first, then Player 2 picks. Player 1's move stays hidden.";
+
+    setMessage(intro, "");
+    updateScore();
+}
+
+choiceButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        play(button.dataset.choice);
     });
 });
+
+modeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        setMode(button.dataset.mode);
+    });
+});
+
+resetButton.addEventListener("click", resetGame);
+resetGame();
