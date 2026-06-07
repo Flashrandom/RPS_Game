@@ -3,76 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rock Paper Scissors</title>
+    <title>Rock Paper Scissors | Classic Game</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <main class="game">
-        <section class="top-panel">
-            <div>
-                <p class="eyebrow">Simple hand game</p>
-                <h1>Rock Paper Scissors</h1>
+    <div class="container">
+        <h1>✊ Rock Paper Scissors ✋</h1>
+        
+        <div class="choices">
+            <div class="choice" id="rock">
+                <div class="emoji">✊</div>
+                <span>Rock</span>
             </div>
-
-            <div class="mode-switch" aria-label="Choose game mode">
-                <button class="mode-btn active" type="button" data-mode="computer">Vs Computer</button>
-                <button class="mode-btn" type="button" data-mode="two-player">Two Player</button>
+            <div class="choice" id="paper">
+                <div class="emoji">✋</div>
+                <span>Paper</span>
             </div>
-        </section>
-
-        <section class="score-board" aria-label="Score board">
-            <div class="score-box">
-                <span id="player-one-label">Player 1</span>
-                <strong id="player-one-score">0</strong>
+            <div class="choice" id="scissors">
+                <div class="emoji">✌️</div>
+                <span>Scissors</span>
             </div>
+        </div>
 
-            <div class="round-box">
-                <span>Round</span>
-                <strong id="round-number">1</strong>
+        <div class="score-board">
+            <div class="score-card">
+                <div class="score-value" id="user-score">0</div>
+                <div class="score-label">YOU</div>
             </div>
-
-            <div class="score-box">
-                <span id="player-two-label">Computer</span>
-                <strong id="player-two-score">0</strong>
+            <div class="vs">VS</div>
+            <div class="score-card">
+                <div class="score-value" id="comp-score">0</div>
+                <div class="score-label">COMPUTER</div>
             </div>
-        </section>
+        </div>
 
-        <section class="play-area">
-            <p class="turn-text" id="turn-text">Player 1, choose your move.</p>
-
-            <div class="choices" aria-label="Move choices">
-                <button class="choice" type="button" data-choice="rock">
-                    <img src="images/rock.png" alt="">
-                    <span>Rock</span>
-                </button>
-                <button class="choice" type="button" data-choice="paper">
-                    <img src="images/paper.png" alt="">
-                    <span>Paper</span>
-                </button>
-                <button class="choice" type="button" data-choice="scissors">
-                    <img src="images/scissors.png" alt="">
-                    <span>Scissors</span>
-                </button>
+        <div class="move-display">
+            <div class="your-move">
+                <p>Your Move</p>
+                <div class="move-icon" id="your-move-icon">❓</div>
             </div>
-        </section>
-
-        <section class="result-panel" aria-live="polite">
-            <div class="picked-moves">
-                <div>
-                    <span id="left-pick-label">Player 1 picked</span>
-                    <strong id="player-one-pick">-</strong>
-                </div>
-                <div>
-                    <span id="right-pick-label">Computer picked</span>
-                    <strong id="player-two-pick">-</strong>
-                </div>
+            <div class="comp-move">
+                <p>Computer's Move</p>
+                <div class="move-icon" id="comp-move-icon">❓</div>
             </div>
+        </div>
 
-            <p class="message" id="message">First to win the round gets a point.</p>
-        </section>
+        <div class="msg-container">
+            <p id="msg">Click on Rock, Paper or Scissors to start!</p>
+        </div>
 
-        <button class="reset-btn" type="button" id="reset-btn">Reset Game</button>
-    </main>
+        <button class="reset-btn" id="reset-btn">🔄 Reset Game</button>
+    </div>
 
     <script src="script.js"></script>
 </body>
