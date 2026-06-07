@@ -3,38 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rock Paper Scissors Game</title>
+    <title>Rock Paper Scissors</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Rock Paper Scissors GAME</h1>
-    
-    <div class="choices">
-        <div class="choice" id="rock">
-            <img src="./images/rock.png" alt="rock">
-        </div>
-        <div class="choice" id="paper">
-            <img src="./images/paper.png" alt="paper">
-        </div>
-        <div class="choice" id="scissors">
-            <img src="./images/scissors.png" alt="scissors">
-        </div>
-    </div>
+    <main class="game">
+        <section class="top-panel">
+            <div>
+                <p class="eyebrow">Simple hand game</p>
+                <h1>Rock Paper Scissors</h1>
+            </div>
 
-    <div class="score-board">
-        <div class="score">
-            <p id="user-score">0</p>
-            <p>You</p>
-        </div>
-        <div class="score">
-            <p id="comp-score">0</p>
-            <p>Comp</p>
-        </div>
-    </div>
+            <div class="mode-switch" aria-label="Choose game mode">
+                <button class="mode-btn active" type="button" data-mode="computer">Vs Computer</button>
+                <button class="mode-btn" type="button" data-mode="two-player">Two Player</button>
+            </div>
+        </section>
 
-    <div class="msg-container">
-        <p id="msg">Make your move!</p>
-    </div>
+        <section class="score-board" aria-label="Score board">
+            <div class="score-box">
+                <span id="player-one-label">Player 1</span>
+                <strong id="player-one-score">0</strong>
+            </div>
+
+            <div class="round-box">
+                <span>Round</span>
+                <strong id="round-number">1</strong>
+            </div>
+
+            <div class="score-box">
+                <span id="player-two-label">Computer</span>
+                <strong id="player-two-score">0</strong>
+            </div>
+        </section>
+
+        <section class="play-area">
+            <p class="turn-text" id="turn-text">Player 1, choose your move.</p>
+
+            <div class="choices" aria-label="Move choices">
+                <button class="choice" type="button" data-choice="rock">
+                    <img src="images/rock.png" alt="">
+                    <span>Rock</span>
+                </button>
+                <button class="choice" type="button" data-choice="paper">
+                    <img src="images/paper.png" alt="">
+                    <span>Paper</span>
+                </button>
+                <button class="choice" type="button" data-choice="scissors">
+                    <img src="images/scissors.png" alt="">
+                    <span>Scissors</span>
+                </button>
+            </div>
+        </section>
+
+        <section class="result-panel" aria-live="polite">
+            <div class="picked-moves">
+                <div>
+                    <span id="left-pick-label">Player 1 picked</span>
+                    <strong id="player-one-pick">-</strong>
+                </div>
+                <div>
+                    <span id="right-pick-label">Computer picked</span>
+                    <strong id="player-two-pick">-</strong>
+                </div>
+            </div>
+
+            <p class="message" id="message">First to win the round gets a point.</p>
+        </section>
+
+        <button class="reset-btn" type="button" id="reset-btn">Reset Game</button>
+    </main>
 
     <script src="script.js"></script>
 </body>
